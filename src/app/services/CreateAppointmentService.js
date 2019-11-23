@@ -4,6 +4,7 @@ import pt from 'date-fns/locale/pt';
 import User from '../models/User';
 import Appointment from '../models/Appointment';
 
+import Cache from '../../lib/Cache';
 import Notification from '../schemas/Notification';
 
 class CreateAppointmentService {
@@ -52,6 +53,8 @@ class CreateAppointmentService {
       content: `Novo agendamento de ${user.name} para ${formatedDate}`,
       user: provider_id,
     });
+
+    await Cache.invalidatePrefix(`user:${user.id}:appointments`);
 
     return appointment;
   }
